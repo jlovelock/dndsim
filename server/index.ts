@@ -1,16 +1,27 @@
 import express from 'express';
+import 'dotenv/config';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import config from './ormconfig';
+const port: number = /*process.env.PORT || */3333;
 
 // Controllers
 import {WelcomeController} from './controllers/welcome';
 
-const app: express.Application = express();
-const port: number = /*process.env.PORT || */3333;
+(async () => {
+  try {
+    await createConnection(config);
+  } catch (error) {
+    console.log('Error while connecting to the database', error);
+    return error;
+  }
+  const app: express.Application = express();
 
-// Mount the WelcomeController at the /welcome route
-app.use('/welcome', WelcomeController);
+  // register routes
+  app.use('/welcome', WelcomeController);
 
-// Serve the application at the given port
-app.listen(port, () => {
-    // Success callback
-    console.log(`Listening at http://localhost:${port}/`);
-});
+  app.listen(port, () => {
+      // Success callback
+      console.log(`Listening at http://localhost:${port}/`);
+  });
+})();
