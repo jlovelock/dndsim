@@ -5,6 +5,10 @@ export interface ICreateCharacterRequest {
   pcClass: string;
 }
 
+export interface ICharacter extends ICreateCharacterRequest {
+  id: number;
+}
+
 @Entity()
 export class Character implements ICreateCharacterRequest {
   @PrimaryGeneratedColumn()
