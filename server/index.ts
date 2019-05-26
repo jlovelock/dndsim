@@ -1,4 +1,5 @@
 import express from 'express';
+import * as bodyParser from 'body-parser';
 import 'dotenv/config';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
@@ -8,7 +9,7 @@ const port: number = /*process.env.PORT || */3333;
 import errorMiddleware from './utils/errorMiddleware';
 
 // Controllers
-import {WelcomeController} from './controllers/welcome';
+import CharacterController from './controllers/character';
 
 (async () => {
   try {
@@ -18,9 +19,15 @@ import {WelcomeController} from './controllers/welcome';
     return error;
   }
   const app: express.Application = express();
+  app.use(bodyParser.json());
 
   // register routes
-  app.use('/welcome', WelcomeController);
+  const controllers = [
+    new CharacterController()
+  ];
+  controllers.forEach((controller) => {
+    app.use('/api', controller.router);
+  });
 
   app.use(errorMiddleware);
 
