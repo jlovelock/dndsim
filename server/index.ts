@@ -5,6 +5,8 @@ import { createConnection } from 'typeorm';
 import config from './ormconfig';
 const port: number = /*process.env.PORT || */3333;
 
+import errorMiddleware from './utils/errorMiddleware';
+
 // Controllers
 import {WelcomeController} from './controllers/welcome';
 
@@ -19,6 +21,8 @@ import {WelcomeController} from './controllers/welcome';
 
   // register routes
   app.use('/welcome', WelcomeController);
+
+  app.use(errorMiddleware);
 
   app.listen(port, () => {
       // Success callback
